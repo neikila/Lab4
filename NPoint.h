@@ -7,6 +7,9 @@
 
 #include <iostream>
 #include <vector>
+#include <math.h>
+#include <cmath>
+#include <numeric>
 
 using namespace std;
 
@@ -27,57 +30,79 @@ public:
         coords.push_back(z);
     }
 
-    NPoint operator + (NPoint& p) {
+    NPoint operator + (const NPoint& p) const {
         NPoint result;
-        vector<double>::iterator it = coords.begin();
-        vector<double>::iterator pIt = p.coords.begin();
+        vector<double>::const_iterator it = coords.begin();
+        vector<double>::const_iterator pIt = p.coords.begin();
         for(; it != coords.end(); ++it, ++pIt)
             result.coords.push_back(*it + *pIt);
 
         return result;
     }
 
-    NPoint operator - (NPoint& p) {
+    NPoint operator - (const NPoint& p) const {
         NPoint result;
-        vector<double>::iterator it = coords.begin();
-        vector<double>::iterator pIt = p.coords.begin();
+        vector<double>::const_iterator it = coords.begin();
+        vector<double>::const_iterator pIt = p.coords.begin();
         for(; it != coords.end(); ++it, ++pIt)
             result.coords.push_back(*it - *pIt);
 
         return result;
     }
 
-    NPoint operator / (NPoint& p) {
+    NPoint operator / (const NPoint& p) const {
         NPoint result;
-        vector<double>::iterator it = coords.begin();
-        vector<double>::iterator pIt = p.coords.begin();
+        vector<double>::const_iterator it = coords.begin();
+        vector<double>::const_iterator pIt = p.coords.begin();
         for(; it != coords.end(); ++it, ++pIt)
             result.coords.push_back(*it / *pIt);
 
         return result;
     }
 
-    NPoint operator * (NPoint& p) {
+    NPoint operator * (const NPoint& p) const {
         NPoint result;
-        vector<double>::iterator it = coords.begin();
-        vector<double>::iterator pIt = p.coords.begin();
+        vector<double>::const_iterator it = coords.begin();
+        vector<double>::const_iterator pIt = p.coords.begin();
         for(; it != coords.end(); ++it, ++pIt)
             result.coords.push_back(*it * *pIt);
 
         return result;
     }
 
+    NPoint power(double n) const {
+        NPoint result;
+        vector<double>::const_iterator it = coords.begin();
+        for(; it != coords.end(); ++it)
+            result.coords.push_back(pow(*it, n));
+
+        return result;
+    }
+
+    NPoint abs() const {
+        NPoint result;
+        vector<double>::const_iterator it = coords.begin();
+        for(; it != coords.end(); ++it)
+            result.coords.push_back(std::abs(*it));
+
+        return result;
+    }
+
+    double sum() const {
+        return accumulate(coords.begin(), coords.end(), 0.0);
+    }
+
     void set(int i, double val) { coords[i] = val; }
 
-    double operator[] (const int i) { return coords[i]; }
+    double operator[] (const int i) const { return coords[i]; }
 
-    vector<double>& getCoords() { return coords; }
+    const vector<double>& getCoords() const { return coords; }
 
-    friend ostream& operator<<(ostream& os, NPoint& p);
+    friend ostream& operator<<(ostream& os, const NPoint& p);
 };
 
-ostream &operator<<(ostream &os, NPoint &p) {
-    vector<double>::iterator it = p.coords.begin();
+ostream &operator<<(ostream &os, const NPoint &p) {
+    vector<double>::const_iterator it = p.coords.begin();
     os << '(' << *it++;
     for(; it != p.coords.end(); ++it)
         os << ", " << *it;
