@@ -143,7 +143,44 @@ void test9() {
     cout << net << endl;
 }
 
+void test10() {
+    vector<NPoint> learning = {
+            NPoint(vector<double>({5, 0, 0})),
+            NPoint(vector<double>({0, 8, 0})),
+            NPoint(vector<double>({0, 0, 4})),
+            NPoint(vector<double>({100, 0, 0})),
+            NPoint(vector<double>({0, 13, 0})),
+            NPoint(vector<double>({0, 0, 16})),
+            NPoint(vector<double>({10, 0, 0})),
+            NPoint(vector<double>({0, 22, 0})),
+            NPoint(vector<double>({0, 0, 33})),
+            NPoint(vector<double>({55, 0, 0})),
+            NPoint(vector<double>({0, 60, 0})),
+            NPoint(vector<double>({0, 0, 70})),
+            NPoint(vector<double>({80, 0, 0})),
+            NPoint(vector<double>({0, 90, 0})),
+            NPoint(vector<double>({0, 0, 100})),
+            NPoint(vector<double>({89, 0, 0})),
+            NPoint(vector<double>({0, 91, 0})),
+            NPoint(vector<double>({0, 0, 14})),
+            NPoint(vector<double>({19, 0, 0})),
+            NPoint(vector<double>({0, 20, 0})),
+            NPoint(vector<double>({0, 0, 44})),
+    };
+    NeuralNet net({WTANeuron({1, 0, 0}), WTANeuron({0, 1, 0}), WTANeuron({0, 0, 1})});
+    net.learn(learning);
+
+    vector<double> imageData = {2, 0, 0,
+                                0, 3, 0,
+                                0, 0, 5,
+                                0, 9, 0,
+                                7, 0, 0,
+                                0, 0, 2};
+    AllData allData(3);
+    cout << "Restored:\n" << NPoint(allData.saveImage(net, imageData).getImageData()) << endl;
+}
+
 int main() {
-    test9();
+    test10();
     return 0;
 }

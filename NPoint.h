@@ -118,6 +118,15 @@ public:
         return sqrt(result);
     }
 
+    NPoint round() const {
+        NPoint result;
+        vector<double>::const_iterator it = coords.begin();
+        for(; it != coords.end(); ++it)
+            result.coords.push_back(std::round(*it));
+
+        return result;
+    }
+
     void set(int i, double val) { coords[i] = val; }
 
     double operator[] (const int i) const { return coords[i]; }

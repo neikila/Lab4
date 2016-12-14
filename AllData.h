@@ -89,7 +89,7 @@ public:
         for (int i = 0; i < frames.size(); ++i) {
             auto pair = frames[i];
             auto n = net.getNeurons()[pair.first];
-            result.push_back(n.getWeights() * pair.second);
+            result.push_back((n.getWeights() * pair.second).round());
         }
         return result;
     }
