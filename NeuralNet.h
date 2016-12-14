@@ -33,6 +33,8 @@ public:
         this->neurons = neurons;
     }
 
+    const vector<WTANeuron> &getNeurons() const;
+
     void learn(vector<NPoint> inputs) {
         iterationAmount = inputs.size();
         for (iteration = 0; iteration < inputs.size(); ++iteration) {
@@ -69,6 +71,19 @@ public:
         return *winner;
     }
 
+    unsigned short findWinnerIndex(const NPoint input) const {
+        unsigned short winner = 0;
+        double maxValue = neurons.front().f(input);
+        for (unsigned short i = 1; i < neurons.size(); ++i) {
+            double temp = neurons[i].f(input);
+            if (temp > maxValue) {
+                maxValue = temp;
+                winner = i;
+            }
+        }
+        return winner;
+    }
+
     vector<WTANeuron> sorted(NPoint& input) {
         vector<WTANeuron> neurons(this->neurons);
         std::sort(neurons.begin(), neurons.end(),
@@ -97,6 +112,10 @@ ostream &operator<<(ostream &os, const NeuralNet &p) {
     for(; it != p.neurons.end(); ++it)
         os << *it << endl;
     return os;
+}
+
+const vector<WTANeuron> &NeuralNet::getNeurons() const {
+    return neurons;
 }
 
 #endif //LAB4_NEURALNET_H

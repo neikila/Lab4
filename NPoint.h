@@ -70,6 +70,15 @@ public:
         return result;
     }
 
+    NPoint operator * (const double multiplier) const {
+        NPoint result;
+        vector<double>::const_iterator it = coords.begin();
+        for(; it != coords.end(); ++it)
+            result.coords.push_back(*it * multiplier);
+
+        return result;
+    }
+
     NPoint power(double n) const {
         NPoint result;
         vector<double>::const_iterator it = coords.begin();

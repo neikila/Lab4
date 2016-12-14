@@ -29,7 +29,9 @@ public:
         this->weights = NPoint(weights).normalize();
     }
 
-    double f(const NPoint input) const{
+    const NPoint &getWeights() const;
+
+    double f(const NPoint input) const {
         return (weights * input).sum();
     }
 
@@ -58,5 +60,9 @@ ostream &operator<<(ostream &os, const WTANeuron &p) {
 }
 
 int WTANeuron::id = 0;
+
+const NPoint &WTANeuron::getWeights() const {
+    return weights;
+}
 
 #endif //LAB4_WTANEURON_H
