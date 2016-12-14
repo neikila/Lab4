@@ -13,14 +13,14 @@ class NeuralNet {
 private:
     vector<WTANeuron> neurons;
 
-    double sMin = 1;
-    double sMax = 10;
+    double sMin = 0.01;
+    double sMax = 1;
 
     int iteration = 0;
     int iterationAmount;
 
     double nuMin = 0.1;
-    double nuMax = 2;
+    double nuMax = 1;
 public:
     NeuralNet(size_t inputSize, size_t neuronsAmount) {
         neurons = vector<WTANeuron>();
@@ -36,14 +36,14 @@ public:
     void learn(vector<NPoint> inputs) {
         iterationAmount = inputs.size();
         for (iteration = 0; iteration < inputs.size(); ++iteration) {
-            learn(inputs[iteration]);
-            cout << "Iteration num = " << iteration << endl << *this << endl;
+            learn(inputs[iteration].normalize());
+            cout << "Iteration num = " << iteration << endl << inputs[iteration].normalize() << endl << *this << endl;
         }
     }
 
     void learn(NPoint input) {
         vector<WTANeuron> sortedNeurons = sorted(input);
-        for (size_t i = 0; i < sortedNeurons.size(); ++i) {
+        for (int i = 0; i < sortedNeurons.size(); ++i) {
             sortedNeurons[i].adjust(nu(), gNeighbor(i), input);
         }
         neurons = sortedNeurons;
@@ -84,7 +84,7 @@ public:
         return sMax * pow(sMin / sMax, ((double)iteration) / iterationAmount);
     }
 
-    double gNeighbor(size_t position) {
+    double gNeighbor(int position) {
         return exp(-1.0 * position / sk());
     }
 

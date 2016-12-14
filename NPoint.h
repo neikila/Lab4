@@ -92,6 +92,23 @@ public:
         return accumulate(coords.begin(), coords.end(), 0.0);
     }
 
+    NPoint normalize() const {
+        double length = this->length();
+        vector<double> result;
+        for (int i = 0; i < coords.size(); ++i) {
+            result.push_back(coords[i] / length);
+        }
+        return NPoint(result);
+    }
+
+    double length() const {
+        double result = 0;
+        for (int i = 0; i < coords.size(); ++i) {
+            result += coords[i] * coords[i];
+        }
+        return sqrt(result);
+    }
+
     void set(int i, double val) { coords[i] = val; }
 
     double operator[] (const int i) const { return coords[i]; }

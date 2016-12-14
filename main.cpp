@@ -11,6 +11,12 @@ void test() {
     cout << neuron.f(input) << endl;
 }
 
+void test2() {
+    vector<double> v = {3.0, 4.0};
+    NPoint p(v);
+    cout << p.normalize() << endl;
+}
+
 int main() {
     std::cout << "Hello, World!" << std::endl;
 

@@ -21,15 +21,15 @@ public:
         vector<double> weights = vector<double>();
         for (size_t i = 0; i < size; ++i)
             weights.push_back(i * 0.5);
-        this->weights = NPoint(weights);
+        this->weights = NPoint(weights).normalize();
     }
 
     WTANeuron(vector<double> weights) {
         myId = ++id;
-        this->weights = NPoint(weights);
+        this->weights = NPoint(weights).normalize();
     }
 
-    double f(const NPoint input) {
+    double f(const NPoint input) const{
         return (weights * input).sum();
     }
 
@@ -42,7 +42,7 @@ public:
         for (int i = 0; i < weights.getCoords().size(); ++i) {
             newWeights.push_back(weights[i] + nu * g * (input[i] - weights[i]));
         }
-        weights = NPoint(newWeights);
+        weights = NPoint(newWeights).normalize();
     }
 
     friend ostream& operator<<(ostream& os, const WTANeuron& p);
