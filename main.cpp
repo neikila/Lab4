@@ -29,7 +29,8 @@ void executeWith(int nv, int nh, int neuronsAmount, PngImage& img, Gnuplot& gnup
     cout << "Nh = " << nh << "; ";
 
     int inputsAmount = nv * nh;
-    NeuralNet net({WTANeuron({1, 0, 0, 0}), WTANeuron({0, 1, 0, 0}), WTANeuron({0, 0, 1, 0}), WTANeuron({0, 0, 0, 1})});
+//    NeuralNet net({WTANeuron({1, 0, 0, 0}), WTANeuron({0, 1, 0, 0}), WTANeuron({0, 0, 1, 0}), WTANeuron({0, 0, 0, 1})});
+    NeuralNet net(neuronsAmount, inputsAmount);
 
     if (net.getNeurons()[0].getWeights().getCoords().size() != inputsAmount) {
         cerr << "Wrong params!";
@@ -49,6 +50,20 @@ void executeWith(int nv, int nh, int neuronsAmount, PngImage& img, Gnuplot& gnup
 
     AllData allData(inputsAmount);
     allData.saveImage(net, input);
+
+    vector<int> groupedBy;
+    cout << "Ns " << neuronsAmount << endl;
+    for (int i = 0; i < neuronsAmount; ++i)
+        groupedBy.push_back(0);
+    auto rs = allData.getImage().getResults();
+    cout << "Size: " << rs.size() << endl;
+    for (int i = 0; i < rs.size(); ++i) {
+        groupedBy[rs[i].first] = groupedBy[rs[i].first] + 1;
+    }
+    for (int i = 0; i < groupedBy.size(); ++i) {
+        cout << "Neurons[" << i << "]: amount = " << groupedBy[i] << endl;
+    }
+
     auto results = allData.getImageData(net);
 
     for (int i = 0; i < results.size(); ++i)
@@ -65,9 +80,9 @@ int lab(char* filename) {
     int Nh[3];
     int NeuronsAmount[3];
 
-    Nv[0] = 2;  Nv[1] = 4;  Nv[2] = 8;
-    Nh[0] = 2;  Nh[1] = 4;  Nh[2] = 8;
-    NeuronsAmount[0] = 2;  NeuronsAmount[1] = 4;  NeuronsAmount[2] = 8;
+    Nv[0] = 4;  Nv[1] = 4;  Nv[2] = 8;
+    Nh[0] = 4;  Nh[1] = 4;  Nh[2] = 8;
+    NeuronsAmount[0] = 8;  NeuronsAmount[1] = 4;  NeuronsAmount[2] = 8;
 
     if (!img.readImage(filename))
         return 1;
@@ -83,7 +98,7 @@ int lab(char* filename) {
 }
 
 int main(int argc, char **argv) {
-    lab((char *) "test1.png");
+    lab((char *) "/home/ws/Lab4/test1.png");
 
     return 0;
 }

@@ -13,26 +13,21 @@ class WTANeuron {
 private:
     static int id;
     NPoint weights;
-    int myId;
 
 public:
-    WTANeuron(size_t size) {
-        myId = ++id;
-        vector<double> weights = vector<double>();
-        for (size_t i = 0; i < size; ++i)
-            weights.push_back(i * 0.5);
-        this->weights = NPoint(weights).normalize();
-    }
+    int myId;
+    double potential;
 
     WTANeuron(vector<double> weights) {
-        myId = ++id;
+        myId = id++;
+        potential = 0.75;
         this->weights = NPoint(weights).normalize();
     }
 
     const NPoint &getWeights() const;
 
     double f(const NPoint input) const {
-        return (weights * input).sum();
+        return delta(input);
     }
 
     double delta(const NPoint input) const {

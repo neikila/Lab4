@@ -21,8 +21,12 @@ private:
 
     double nuMin = 0.1;
     double nuMax = 1;
+
+    double pMin = 0.75;
+    double pMax = 1;
 public:
     NeuralNet(int neuronsAmount, int inputSize) {
+        srand(time(NULL));
         vector<WTANeuron> neurons;
         for (int i = 0; i < neuronsAmount; ++i) {
             double val = i * (((double)inputSize) / neuronsAmount);
@@ -31,7 +35,9 @@ public:
             for (int j = inputSize - 1; j >= 0; --j) {
                 weights.push_back(rand() % 100 / 100.0);
             }
-            neurons.push_back(WTANeuron(weights));
+            WTANeuron n(weights);
+            n.myId = i;
+            neurons.push_back(n);
         }
         this->neurons = neurons;
     }
@@ -42,20 +48,48 @@ public:
 
     const vector<WTANeuron> &getNeurons() const;
 
-    void learn(vector<NPoint> inputs) {
+    void learn(vector<NPoint>& inputs) {
         iterationAmount = inputs.size();
         for (iteration = 0; iteration < inputs.size(); ++iteration) {
             learn(inputs[iteration].normalize());
-            cout << "Iteration num = " << iteration << endl << inputs[iteration].normalize() << endl << *this << endl;
+//            cout << "Iteration num = " << iteration << endl << inputs[iteration].normalize() << endl << *this << endl;
         }
+    }
+
+    vector<WTANeuron> filter(vector<WTANeuron>& ns) {
+        vector<WTANeuron> result;
+        for (int i = 0; i < ns.size(); ++i) {
+            if (ns[i].potential >= pMin)
+                result.push_back(ns[i]);
+        }
+        if (result.size() == 0)
+            return ns;
+        else
+            return result;
     }
 
     void learn(NPoint input) {
         vector<WTANeuron> sortedNeurons = sorted(input);
-        for (int i = 0; i < sortedNeurons.size(); ++i) {
-            sortedNeurons[i].adjust(nu(), gNeighbor(i), input);
+        auto filtered = filter(sortedNeurons);
+
+        for (int i = 0; i < filtered.size(); ++i) {
+            auto n = filtered[i];
+
+            n.adjust(nu(), gNeighbor(i), input);
+
         }
+
         neurons = sortedNeurons;
+        auto winner = filtered[0];
+        for (int i = 0; i < neurons.size(); ++i) {
+            auto n = neurons[i];
+            if (n.myId == winner.myId) {
+                n.potential = n.potential - pMin;
+            } else {
+                double newPot = n.potential + (1.0 / neurons.size());
+                n.potential = (newPot > pMax) ? pMax : newPot;
+            }
+        }
     }
 
     WTANeuron &findWinner(vector<double> input) {
@@ -78,10 +112,10 @@ public:
         return *winner;
     }
 
-    unsigned short findWinnerIndex(const NPoint input) const {
-        unsigned short winner = 0;
+    int findWinnerIndex(const NPoint input) const {
+        int winner = 0;
         double maxValue = neurons.front().f(input);
-        for (unsigned short i = 1; i < neurons.size(); ++i) {
+        for (int i = 1; i < neurons.size(); ++i) {
             double temp = neurons[i].f(input);
             if (temp > maxValue) {
                 maxValue = temp;

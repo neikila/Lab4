@@ -32,7 +32,7 @@ public:
         Zipped result;
         for (int i = 0; i < inputs.size(); ++i) {
             auto winnerIndex = net.findWinnerIndex(inputs[i]);
-            result.add(pair<unsigned short, double>(winnerIndex, inputs[i].length()));
+            result.add(pair<int, double>(winnerIndex, inputs[i].length()));
         }
         return result;
     }

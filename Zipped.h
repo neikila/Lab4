@@ -11,21 +11,21 @@ using namespace std;
 
 class Zipped {
 private:
-    vector<std::pair<unsigned short, double>> results;
+    vector<std::pair<int, double>> results;
 public:
-    Zipped() { results = vector<std::pair<unsigned short, double>>(); }
+    Zipped() { results = vector<std::pair<int, double>>(); }
 
-    Zipped &add(std::pair<unsigned short, double> pair) {
+    Zipped &add(std::pair<int, double> pair) {
         results.push_back(pair);
         return *this;
     }
 
     Zipped& add(int winnerIndex, double length) {
-        results.push_back(pair<unsigned short, double>((unsigned short)winnerIndex, length));
+        results.push_back(pair<int, double>((int)winnerIndex, length));
         return *this;
     }
 
-    const vector<std::pair<unsigned short, double>> &getResults() const {
+    const vector<std::pair<int, double>> &getResults() const {
         return results;
     }
 
@@ -33,7 +33,7 @@ public:
 };
 
 ostream &operator<<(ostream &os, const Zipped &p) {
-    vector<std::pair<unsigned short, double>>::const_iterator it = p.results.begin();
+    vector<std::pair<int, double>>::const_iterator it = p.results.begin();
     os << "Zipped result: " << endl;
     for(; it != p.results.end(); ++it)
         os << "{ NeuronId: " << it->first << ", Amplitude: " << it->second << '}' << endl;

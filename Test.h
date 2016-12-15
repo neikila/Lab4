@@ -13,11 +13,11 @@ using namespace std;
 
 class Test {
 public:
-    void test() {
-        WTANeuron neuron(3);
-        vector<double> input({10, 12, 13});
-        cout << neuron.f(input) << endl;
-    }
+//    void test() {
+//        WTANeuron neuron(3);
+//        vector<double> input({10, 12, 13});
+//        cout << neuron.f(input) << endl;
+//    }
 
     void test2() {
         vector<double> v = {3.0, 4.0};
