@@ -1,9 +1,12 @@
 #include <iostream>
 #include <algorithm>
+#include <sstream>
+#include <fstream>
 #include "WTANeuron.h"
 #include "NeuralNet.h"
 #include "Zipped.h"
 #include "AllData.h"
+#include "pngimage.h"
 
 using namespace std;
 
@@ -178,6 +181,94 @@ void test10() {
                                 0, 0, 2};
     AllData allData(3);
     cout << "Restored:\n" << NPoint(allData.saveImage(net, imageData).getImageData()) << endl;
+}
+
+int lab(int argc, char* argv[]) {
+    PngImage img;
+    int Nv[3];
+    int Nh[3];
+
+    Nv[0] = 2;  Nv[1] = 4;  Nv[2] = 8;
+    Nh[0] = 2;  Nh[1] = 4;  Nh[2] = 8;
+
+    if (argc != 2) {
+        cerr << "Input/output images not specified" << endl;
+        return 0;
+    }
+
+    NeuralNet net({WTANeuron({1, 0, 0}), WTANeuron({0, 1, 0}), WTANeuron({0, 0, 1})});
+
+    if (!img.readImage(argv[1])) return 1;
+
+    ofstream plot;
+    plot.open("plot.plt", ofstream::out | ofstream::trunc);
+
+    plot << "set multiplot layout 2,2 rowsfirst" << endl;
+    plot << "unset key; unset tics; unset border" << endl;
+    plot << "set size ratio 1" << endl;
+
+    plot << "set title \"Source image\"" << endl;
+    plot << "plot \"" << argv[1] << "\" binary filetype=png with rgbimage" << endl;
+
+
+    for (int k = 0; k < 1; k++) {
+        cout << "Nv = " << Nv[k] << "; ";
+        cout << "Nh = " << Nh[k] << "; ";
+
+        int inputsAmount = Nv[k] * Nh[k];
+
+        int blocksAmount = img.getBlockCount(Nv[k], Nh[k]);
+        cout << blocksAmount << endl;
+
+        vector<NPoint> input;
+        for (int i = 0; i < blocksAmount; ++i) {
+            input.push_back(NPoint(img.getBlock(i, Nv[k], Nh[k])));
+        }
+
+        for (int j = 0; j < 10; j++) {
+            net.learn(input);
+        }
+
+        AllData allData(inputsAmount);
+        allData.saveImage(net, input);
+//        for (int i = 0; i < blocks; i++) {
+//            block = img.getBlock(i, Nv[k], Nh[k]);
+//            out = net->compute(block);
+//            img.setBlock(out, i, Nv[k], Nh[k]);
+//        }
+
+        auto results = allData.getImageData(net);
+        for (int i = 0; i < results.size(); ++i) {
+            img.setBlock(results[i].toUchars(), i, Nv[k], Nh[k]);
+        }
+
+        string name_base;
+        name_base.append(argv[1]);
+        name_base = name_base.substr(0, name_base.find_first_of('.'));
+
+        ostringstream s;
+        s.str("");
+        s << name_base << "_" << Nh[k] << "_" << Nv[k] << ".png";
+
+        string out_name;
+        out_name.clear();
+        out_name.assign(s.str());
+        img.writeImage(out_name.c_str());
+
+        plot << "set title \"Image Nv = " << Nv[k]
+             << ", Nh = "<< Nh[k]
+             << "\"" << endl;
+        plot << "plot \"" << out_name
+             << "\" binary filetype=png with rgbimage\n" << endl;
+
+        cerr << "Done..." << endl;
+    }
+
+//    plot << "unset multiplot" << endl;
+
+    plot.close();
+
+    return 0;
 }
 
 int main() {

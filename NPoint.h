@@ -10,6 +10,7 @@
 #include <math.h>
 #include <cmath>
 #include <numeric>
+#include "pngimage.h"
 
 using namespace std;
 
@@ -19,6 +20,14 @@ private:
 public:
     NPoint() : coords(vector<double>()) { }
     NPoint(vector<double> coords_val) : coords(coords_val) { }
+    NPoint(vector<uchar> coords_val) {
+        coords = vector<double>();
+        for (int i = 0; i < coords_val.size(); ++i) {
+            auto t2 = (double)coords_val[i];
+            coords.push_back(t2);
+        }
+    }
+
     NPoint(double x, double y) : coords(vector<double>()) {
         coords.push_back(x);
         coords.push_back(y);
@@ -124,6 +133,15 @@ public:
         for(; it != coords.end(); ++it)
             result.coords.push_back(std::round(*it));
 
+        return result;
+    }
+
+    vector<uchar> toUchars() {
+        vector<uchar> result;
+        for (int i = 0; i < coords.size(); ++i) {
+            auto tmp = (uchar)std::round(coords[i]);
+            result.push_back(tmp);
+        }
         return result;
     }
 
