@@ -23,52 +23,59 @@ basic_string createOutName(int nv, int nh, int neuronsAmount, char* filename) {
     return out_name;
 }
 
+void executeWith(int nv, int nh, int neuronsAmount, PngImage& img, Gnuplot& gnuplot, char* filename) {
+    cout << "Nv = " << nv << "; ";
+    cout << "Nh = " << nh << "; ";
+
+    int inputsAmount = nv * nh;
+    NeuralNet net({WTANeuron({1, 0, 0, 0}), WTANeuron({0, 1, 0, 0}), WTANeuron({0, 0, 1, 0}), WTANeuron({0, 0, 0, 1})});
+
+    if (net.getNeurons()[0].getWeights().getCoords().size() != inputsAmount) {
+        cerr << "Wrong params!";
+        return;
+    }
+
+    int blocksAmount = img.getBlockCount(nv, nh);
+    cout << blocksAmount << endl;
+
+    vector<NPoint> input;
+    for (int i = 0; i < blocksAmount; ++i)
+        input.push_back(NPoint(img.getBlock(i, nv, nh)));
+
+    int evolutionsAmount = 10;
+    for (int j = 0; j < evolutionsAmount; j++)
+        net.learn(input);
+
+    AllData allData(inputsAmount);
+    allData.saveImage(net, input);
+    auto results = allData.getImageData(net);
+
+    for (int i = 0; i < results.size(); ++i)
+        img.setBlock(results[i].toUchars(), i, nv, nh);
+
+    basic_string out_name = createOutName(nv, nh, (int)net.getNeurons().size(), filename);
+    img.writeImage(out_name.c_str());
+    gnuplot.finish(nv, nh, out_name);
+}
+
 int lab(char* filename) {
     PngImage img;
     int Nv[3];
     int Nh[3];
+    int NeuronsAmount[3];
 
     Nv[0] = 2;  Nv[1] = 4;  Nv[2] = 8;
     Nh[0] = 2;  Nh[1] = 4;  Nh[2] = 8;
+    NeuronsAmount[0] = 2;  NeuronsAmount[1] = 4;  NeuronsAmount[2] = 8;
 
     if (!img.readImage(filename))
         return 1;
-
-    NeuralNet net({WTANeuron({1, 0, 0}), WTANeuron({0, 1, 0}), WTANeuron({0, 0, 1})});
 
     Gnuplot gnuplot;
     gnuplot.init(filename);
 
     for (int k = 0; k < 1; k++) {
-        cout << "Nv = " << Nv[k] << "; ";
-        cout << "Nh = " << Nh[k] << "; ";
-
-        int inputsAmount = Nv[k] * Nh[k];
-
-        int blocksAmount = img.getBlockCount(Nv[k], Nh[k]);
-        cout << blocksAmount << endl;
-
-        vector<NPoint> input;
-        for (int i = 0; i < blocksAmount; ++i) {
-            input.push_back(NPoint(img.getBlock(i, Nv[k], Nh[k])));
-        }
-
-        for (int j = 0; j < 10; j++) {
-            net.learn(input);
-        }
-
-        AllData allData(inputsAmount);
-        allData.saveImage(net, input);
-
-        auto results = allData.getImageData(net);
-        for (int i = 0; i < results.size(); ++i) {
-            img.setBlock(results[i].toUchars(), i, Nv[k], Nh[k]);
-        }
-
-        basic_string out_name = createOutName(Nv[k], Nh[k], (int)net.getNeurons().size(), filename);
-        img.writeImage(out_name.c_str());
-        gnuplot.finish(Nv[k], Nh[k], out_name);
-
+        executeWith(Nv[k], Nh[k], NeuronsAmount[k], img, gnuplot, filename);
         cerr << "Done..." << endl;
     }
     return 0;
