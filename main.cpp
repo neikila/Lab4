@@ -83,13 +83,7 @@ int lab(char* filename) {
 }
 
 int main(int argc, char **argv) {
-//    if (argc != 2) {
-//        cerr << "Input/output images not specified" << endl;
-//        return 0;
-//    }
-//    lab(argv[1]);
+    lab((char *) "test1.png");
 
-    Test a;
-    a.test11();
     return 0;
 }
