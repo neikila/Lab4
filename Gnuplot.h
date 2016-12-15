@@ -29,7 +29,7 @@ public:
         plot << "plot \"" << filename << "\" binary filetype=png with rgbimage" << endl;
     }
 
-    void finish(int nv, int nh, basic_string out_name) {
+    void finish(int nv, int nh, string out_name) {
         plot << "set title \"Image Nv = " << nv
              << ", Nh = "<< nh
              << "\"" << endl;

@@ -5,10 +5,11 @@
 #include "NeuralNet.h"
 #include "AllData.h"
 #include "Gnuplot.h"
+#include "Test.h"
 
 using namespace std;
 
-basic_string createOutName(int nv, int nh, int neuronsAmount, char* filename) {
+string createOutName(int nv, int nh, int neuronsAmount, char* filename) {
     string name_base;
     name_base.append(filename);
     name_base = name_base.substr(0, name_base.find_first_of('.'));
@@ -53,7 +54,7 @@ void executeWith(int nv, int nh, int neuronsAmount, PngImage& img, Gnuplot& gnup
     for (int i = 0; i < results.size(); ++i)
         img.setBlock(results[i].toUchars(), i, nv, nh);
 
-    basic_string out_name = createOutName(nv, nh, (int)net.getNeurons().size(), filename);
+    string out_name = createOutName(nv, nh, (int)net.getNeurons().size(), filename);
     img.writeImage(out_name.c_str());
     gnuplot.finish(nv, nh, out_name);
 }
@@ -82,10 +83,13 @@ int lab(char* filename) {
 }
 
 int main(int argc, char **argv) {
-    if (argc != 2) {
-        cerr << "Input/output images not specified" << endl;
-        return 0;
-    }
-    lab(argv[1]);
+//    if (argc != 2) {
+//        cerr << "Input/output images not specified" << endl;
+//        return 0;
+//    }
+//    lab(argv[1]);
+
+    Test a;
+    a.test11();
     return 0;
 }

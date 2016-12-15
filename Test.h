@@ -28,7 +28,8 @@ public:
     void test3() {
         AllData allData(3);
 
-        NPoint data({1, 3, 4, 5, 6, 7});
+        vector<double> weights = {1, 3, 4, 5, 6, 7};
+        NPoint data(weights);
 
         auto frames = allData.convertImageToFrames(data.getCoords(), 3);
         cout << "Size = " << frames.size() << endl;
@@ -186,6 +187,10 @@ public:
         cout << "Restored:\n" << NPoint(allData.saveImage(net, imageData).getImageData()) << endl;
     }
 
+    void test11() {
+        NeuralNet net(16, 4);
+        cout << net << endl;
+    }
 };
 
 

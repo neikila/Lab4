@@ -22,11 +22,18 @@ private:
     double nuMin = 0.1;
     double nuMax = 1;
 public:
-    NeuralNet(size_t inputSize, size_t neuronsAmount) {
-        neurons = vector<WTANeuron>();
-        for (size_t i = 0; i < neuronsAmount; ++i) {
-            neurons.push_back(WTANeuron(inputSize));
+    NeuralNet(int neuronsAmount, int inputSize) {
+        vector<WTANeuron> neurons;
+        for (int i = 0; i < neuronsAmount; ++i) {
+            double val = i * (((double)inputSize) / neuronsAmount);
+
+            vector<double> weights;
+            for (int j = inputSize - 1; j >= 0; --j) {
+                weights.push_back(rand() % 100 / 100.0);
+            }
+            neurons.push_back(WTANeuron(weights));
         }
+        this->neurons = neurons;
     }
 
     NeuralNet(vector<WTANeuron> neurons) {
