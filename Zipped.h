@@ -6,6 +6,8 @@
 #define LAB4_ZIPPED_H
 
 #include <vector>
+#include <fstream>
+#include <iostream>
 
 using namespace std;
 

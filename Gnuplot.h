@@ -33,7 +33,7 @@ public:
         plot << "set title \"Image Nv = " << nv
              << ", Nh = "<< nh
              << "\"" << endl;
-        plot << "plot \"" << out_name
+        plot << "plot \"" << out_name.c_str()
              << "\" binary filetype=png with rgbimage\n" << endl;
     }
 

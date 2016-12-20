@@ -3,8 +3,11 @@
 
 #include <png.h>
 #include <vector>
+#include <iostream>
+#include <fstream>
 
 typedef unsigned char uchar;
+using namespace std;
 
 class PngImage
 {
@@ -93,9 +96,9 @@ bool PngImage::readImage(char *filename)
                  &compression_method,
                  &filter_method);
     if (bit_depth != 8 || color_type != 0) {
-        std::cerr << "Wrong image format" << std::endl;
-        std::cerr << "color type (support only 0): " << color_type << std::endl;
-        std::cerr << "bit depth (support only 8): " << bit_depth << std::endl;
+        cerr << "Wrong image format" << endl;
+        cerr << "color type (support only 0): " << color_type << endl;
+        cerr << "bit depth (support only 8): " << bit_depth << endl;
         return false;
     }
     buffer = png_get_rows(readStruct, info);
@@ -103,8 +106,8 @@ bool PngImage::readImage(char *filename)
 
     fclose(file);
 
-    std::cerr << "Width = " << width << std::endl;
-    std::cerr << "Heigth = " << heigth << std::endl;
+    cerr << "Width = " << width << endl;
+    cerr << "Heigth = " << heigth << endl;
 
     return true;
 }
@@ -115,7 +118,7 @@ bool PngImage::writeImage(const char *filename)
     FILE *file;
 
     if ((file = fopen(filename, "w")) == NULL) {
-        std::cerr << "Can't write to file " << filename << std::endl;
+        cerr << "Can't write to file " << filename << endl;
         return false;
     }
 

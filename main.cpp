@@ -16,7 +16,7 @@ string createOutName(int nv, int nh, int neuronsAmount, char* filename) {
 
     ostringstream s;
     s.str("");
-    s << name_base << "_" << nh << "_" << nv << "_" << neuronsAmount << ".png";
+    s << name_base.c_str() << "_" << nh << "_" << nv << "_" << neuronsAmount << ".png";
 
     string out_name;
     out_name.clear();
@@ -98,7 +98,7 @@ int lab(char* filename) {
 }
 
 int main(int argc, char **argv) {
-    lab((char *) "/home/ws/Lab4/test1.png");
+    lab((char *) "/home/neikila/Lab4/test1.png");
 
     return 0;
 }

@@ -84,10 +84,10 @@ public:
         for (int i = 0; i < neurons.size(); ++i) {
             auto n = neurons[i];
             if (n.myId == winner.myId) {
-                n.potential = n.potential - pMin;
+                neurons[i].potential = neurons[i].potential - pMin;
             } else {
                 double newPot = n.potential + (1.0 / neurons.size());
-                n.potential = (newPot > pMax) ? pMax : newPot;
+                neurons[i].potential = (newPot > pMax) ? pMax : newPot;
             }
         }
     }
@@ -104,7 +104,7 @@ public:
 
         for (++n; n != neurons.end(); ++n) {
             double temp = n->f(input);
-            if (temp > maxValue) {
+            if (temp < maxValue) {
                 maxValue = temp;
                 winner = &(*n);
             }

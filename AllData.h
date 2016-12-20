@@ -7,6 +7,8 @@
 
 #include "Zipped.h"
 #include "NeuralNet.h"
+#include <fstream>
+#include <iostream>
 
 using namespace std;
 
