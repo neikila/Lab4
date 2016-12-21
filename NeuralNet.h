@@ -70,12 +70,10 @@ public:
     void learn(NPoint input) {
         vector<WTANeuron> sortedNeurons = sorted(input);
         auto filtered = filter(sortedNeurons);
-
         for (int i = 0; i < filtered.size(); ++i) {
-            filtered[i].adjust(nu(), gNeighbor(i), input);
+            neurons[filtered[i].myId].adjust(nu(), gNeighbor(i), input);
         }
 
-        neurons = sortedNeurons;
         auto winner = filtered[0];
         for (int i = 0; i < neurons.size(); ++i) {
             if (neurons[i].myId == winner.myId) {
