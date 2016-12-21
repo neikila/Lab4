@@ -17,7 +17,7 @@ private:
     double sMax = 1;
 
     int iteration = 0;
-    int iterationAmount;
+    unsigned long iterationAmount;
 
     double nuMin = 0.1;
     double nuMax = 1;
@@ -52,7 +52,6 @@ public:
         iterationAmount = inputs.size();
         for (iteration = 0; iteration < inputs.size(); ++iteration) {
             learn(inputs[iteration].normalize());
-//            cout << "Iteration num = " << iteration << endl << inputs[iteration].normalize() << endl << *this << endl;
         }
     }
 
@@ -73,43 +72,19 @@ public:
         auto filtered = filter(sortedNeurons);
 
         for (int i = 0; i < filtered.size(); ++i) {
-            auto n = filtered[i];
-
-            n.adjust(nu(), gNeighbor(i), input);
-
+            filtered[i].adjust(nu(), gNeighbor(i), input);
         }
 
         neurons = sortedNeurons;
         auto winner = filtered[0];
         for (int i = 0; i < neurons.size(); ++i) {
-            auto n = neurons[i];
-            if (n.myId == winner.myId) {
+            if (neurons[i].myId == winner.myId) {
                 neurons[i].potential = neurons[i].potential - pMin;
             } else {
-                double newPot = n.potential + (1.0 / neurons.size());
+                double newPot = neurons[i].potential + (1.0 / neurons.size());
                 neurons[i].potential = (newPot > pMax) ? pMax : newPot;
             }
         }
-    }
-
-    WTANeuron &findWinner(vector<double> input) {
-        return findWinner(NPoint(input));
-    }
-
-    WTANeuron &findWinner(NPoint input) {
-        vector<WTANeuron>::iterator n = neurons.begin();
-
-        WTANeuron *winner = &neurons.front();
-        double maxValue = winner->f(input);
-
-        for (++n; n != neurons.end(); ++n) {
-            double temp = n->f(input);
-            if (temp < maxValue) {
-                maxValue = temp;
-                winner = &(*n);
-            }
-        }
-        return *winner;
     }
 
     int findWinnerIndex(const NPoint input) const {
@@ -117,7 +92,7 @@ public:
         double maxValue = neurons.front().f(input);
         for (int i = 1; i < neurons.size(); ++i) {
             double temp = neurons[i].f(input);
-            if (temp > maxValue) {
+            if (temp < maxValue) {
                 maxValue = temp;
                 winner = i;
             }

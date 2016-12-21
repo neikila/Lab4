@@ -82,7 +82,7 @@ int lab(char* filename) {
 
     Nv[0] = 4;  Nv[1] = 4;  Nv[2] = 8;
     Nh[0] = 4;  Nh[1] = 4;  Nh[2] = 8;
-    NeuronsAmount[0] = 8;  NeuronsAmount[1] = 4;  NeuronsAmount[2] = 8;
+    NeuronsAmount[0] = 16;  NeuronsAmount[1] = 4;  NeuronsAmount[2] = 8;
 
     if (!img.readImage(filename))
         return 1;
@@ -99,6 +99,8 @@ int lab(char* filename) {
 
 int main(int argc, char **argv) {
     lab((char *) "/home/neikila/Lab4/test1.png");
+//    Test t;
+//    t.test12();
 
     return 0;
 }

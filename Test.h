@@ -13,11 +13,6 @@ using namespace std;
 
 class Test {
 public:
-//    void test() {
-//        WTANeuron neuron(3);
-//        vector<double> input({10, 12, 13});
-//        cout << neuron.f(input) << endl;
-//    }
 
     void test2() {
         vector<double> v = {3.0, 4.0};
@@ -190,6 +185,23 @@ public:
     void test11() {
         NeuralNet net(16, 4);
         cout << net << endl;
+    }
+
+    void test12() {
+        vector<WTANeuron> ns = { WTANeuron({1, 0, 0}), WTANeuron({0, 1, 0}), WTANeuron({0, 0, 1}) };
+
+        ns.front().potential = 0.4;
+        cout << ns.front().potential << endl;
+
+        vector<double> tmp = {1, 1, 1};
+
+        ns.front().adjust(1, 1, NPoint(tmp));
+
+        cout << ns.front().getWeights() << endl;
+
+        vector<WTANeuron> anotherOne = ns;
+        cout << anotherOne.front().potential << endl;
+        cout << anotherOne.front().getWeights() << endl;
     }
 };
 
