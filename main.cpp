@@ -5,7 +5,6 @@
 #include "NeuralNet.h"
 #include "AllData.h"
 #include "Gnuplot.h"
-#include "Test.h"
 
 using namespace std;
 const int evolutionsAmount = 10;
@@ -24,6 +23,21 @@ string createOutName(int nv, int nh, int neuronsAmount, char* filename) {
     out_name.clear();
     out_name.assign(s.str());
     return out_name;
+}
+
+void logDistribution(int neuronsAmount, AllData& allData) {
+    vector<int> groupedBy;
+    cout << "Ns " << neuronsAmount << endl;
+    for (int i = 0; i < neuronsAmount; ++i)
+        groupedBy.push_back(0);
+    auto rs = allData.getImage().getResults();
+    cout << "Size: " << rs.size() << endl;
+    for (int i = 0; i < rs.size(); ++i) {
+        groupedBy[rs[i].first] = groupedBy[rs[i].first] + 1;
+    }
+    for (int i = 0; i < groupedBy.size(); ++i) {
+        cout << "Neurons[" << i << "]: amount = " << groupedBy[i] << endl;
+    }
 }
 
 int executeWith(int nv, int nh, int neuronsAmount, Gnuplot& gnuplot, char* filename) {
@@ -54,18 +68,7 @@ int executeWith(int nv, int nh, int neuronsAmount, Gnuplot& gnuplot, char* filen
     AllData allData(inputsAmount);
     allData.saveImage(net, input);
 
-    vector<int> groupedBy;
-    cout << "Ns " << neuronsAmount << endl;
-    for (int i = 0; i < neuronsAmount; ++i)
-        groupedBy.push_back(0);
-    auto rs = allData.getImage().getResults();
-    cout << "Size: " << rs.size() << endl;
-    for (int i = 0; i < rs.size(); ++i) {
-        groupedBy[rs[i].first] = groupedBy[rs[i].first] + 1;
-    }
-    for (int i = 0; i < groupedBy.size(); ++i) {
-        cout << "Neurons[" << i << "]: amount = " << groupedBy[i] << endl;
-    }
+    logDistribution(neuronsAmount, allData);
 
     auto results = allData.getImageData(net);
 
